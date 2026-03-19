@@ -27,6 +27,43 @@
             overflow: hidden; /* Impede a tela de rolar quando o botão fugir */
         }
 
+        /* --- BOTÃO DE MÚSICA E AVISO NO CANTO SUPERIOR ESQUERDO --- */
+        #music-container {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            z-index: 30; /* Garante que fique acima de tudo */
+        }
+
+        #music-btn {
+            background-color: #fff;
+            border: 4px solid #ff758f;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 3px 3px 0px #ff8fa3;
+            transition: transform 0.1s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #music-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px #ff8fa3;
+        }
+
+        .volume-text {
+            font-size: 24px;
+            color: #555;
+            margin-left: 15px; /* Espaço entre o botão e o texto */
+            text-shadow: 1px 1px 0px #ffb3c6;
+        }
+
         /* --- TELA DO ENVELOPE --- */
         #envelope-screen {
             display: flex;
@@ -177,10 +214,28 @@
                 padding: 5px 15px;
                 gap: 10px;
             }
+            .volume-text {
+                font-size: 18px;
+                margin-left: 10px;
+            }
+            #music-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
         }
     </style>
 </head>
 <body>
+
+    <audio id="bg-music" loop>
+        <source src="musica.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="music-container">
+        <button id="music-btn">🎵</button>
+        <span class="volume-text">♡ Aumente o Volume ♡</span>
+    </div>
 
     <div id="envelope-screen">
         <img src="5.png" alt="Envelope fechado" id="envelope-img">
@@ -224,11 +279,37 @@
         const btnNo = document.getElementById('btn-no');
         const questionScreen = document.getElementById('question-screen');
         const successScreen = document.getElementById('success-screen');
+        const musicBtn = document.getElementById('music-btn');
+        const bgMusic = document.getElementById('bg-music');
+        
+        let isMusicPlaying = false;
 
         // Ação de clicar no Envelope
         envelopeScreen.addEventListener('click', () => {
             envelopeScreen.style.display = 'none'; // Esconde o envelope
             mainWindow.style.display = 'block';    // Mostra a janela da pergunta
+            
+            // Tenta tocar a música
+            bgMusic.play().then(() => {
+                isMusicPlaying = true;
+                musicBtn.innerText = '🔊'; // Muda ícone para som ligado
+            }).catch((error) => {
+                console.log("Navegador bloqueou o áudio", error);
+                // Se o navegador bloquear, o botão de volume no canto continua lá
+                // e ela pode clicar nele para tocar.
+            });
+        });
+
+        // Controle do botão de música no canto da tela
+        musicBtn.addEventListener('click', () => {
+            if (isMusicPlaying) {
+                bgMusic.pause();
+                musicBtn.innerText = '🔈'; // Ícone de som mutado
+            } else {
+                bgMusic.play();
+                musicBtn.innerText = '🔊'; // Ícone de som tocando
+            }
+            isMusicPlaying = !isMusicPlaying;
         });
 
         // Ação de clicar no SIM
@@ -239,27 +320,21 @@
 
         // Função para o botão NÃO fugir
         function fugirBotao(e) {
-            // Se for no celular (touch), evita que o botão seja clicado acidentalmente
             if(e.type === 'touchstart') {
                 e.preventDefault();
             }
 
-            // Calcula o espaço máximo que o botão pode ir sem sumir da tela
             const maxX = window.innerWidth - btnNo.offsetWidth - 20;
             const maxY = window.innerHeight - btnNo.offsetHeight - 20;
 
-            // Gera coordenadas aleatórias
             const x = Math.floor(Math.random() * maxX);
             const y = Math.floor(Math.random() * maxY);
             
-            // Move o botão
             btnNo.style.position = 'fixed';
-            // Math.max garante que o botão não vá para uma posição negativa (fora da tela por cima/esquerda)
             btnNo.style.left = `${Math.max(10, x)}px`;
             btnNo.style.top = `${Math.max(10, y)}px`;
         }
 
-        // Adiciona a fuga tanto para o mouse (PC) quanto para o toque (Celular)
         btnNo.addEventListener('mouseover', fugirBotao);
         btnNo.addEventListener('touchstart', fugirBotao);
     </script>
