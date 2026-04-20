@@ -239,12 +239,12 @@
 
     <div id="envelope-screen">
         <img src="5.png" alt="Envelope fechado" id="envelope-img">
-        <div class="envelope-text">♡ OS TREM MENINA ♡<br>PARA<br> VITÓRIA IMANUELE PENA MORAIS</div>
+        <div class="envelope-text">♡ OS TREM MENINA ♡<br>PARA<br> ANA PAULA KKKKKKK</div>
     </div>
 
     <div class="window" id="main-window">
         <div class="window-header">
-            <span>PARA A MULHER MAIS LINDA</span>
+            <span>KAKAKKAAKAK</span>
             <div class="window-controls">
                 <span>_</span>
                 <span>O</span>
@@ -255,7 +255,7 @@
         <div class="hearts-top"><h2>♥ ♥ ♥</h2></div>
 
         <div id="question-screen">
-            <h2>SE QUER ME VER FINAL DE SEMANA FEDO?</h2>
+            <h2>SE QUER ME VER FEDO?(aperta não para se ver(。_。))</h2>
             <img src="4.gif" alt="Gatinho com coração">
             
             <div class="buttons-container">
@@ -316,6 +316,16 @@
         btnYes.addEventListener('click', () => {
             questionScreen.style.display = 'none'; // Esconde a pergunta
             successScreen.style.display = 'block'; // Mostra a comemoração
+            
+            // --- CÓDIGO DO WHATSAPP ---
+            const seuNumero = "5535997061473"; 
+            const mensagem = "Te gosto gatinhoo（づ￣3￣）づ╭❤️～";
+            const url = `https://wa.me/${seuNumero}?text=${encodeURIComponent(mensagem)}`;
+            
+            // Abre o link do WhatsApp em uma nova aba após 1.5 segundos
+            setTimeout(() => {
+                window.open(url, '_blank');
+            }, 1500);
         });
 
         // Função para o botão NÃO fugir
